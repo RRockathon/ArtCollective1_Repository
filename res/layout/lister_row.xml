@@ -14,12 +14,7 @@
         android:textStyle="bold"
         android:textColor="#fff"
         />
-    <TextView
-        android:id="@+id/lister_row_site_date"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        />
+   
     <TextView
         android:id="@+id/lister_row_site_location"
         android:layout_width="fill_parent"

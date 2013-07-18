@@ -20,7 +20,7 @@ public class Constants {
 	
 	public static final String ARTISTS ="music";
 	
-	public static final String ARTS_EVENTS = "parks";
+	public static final String ARTS_EVENTS = "events";
 	
 	public static final int DIALOG_ABOUT_ID = 0;
 

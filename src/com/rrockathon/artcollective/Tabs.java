@@ -36,24 +36,10 @@ import android.widget.TabHost.OnTabChangeListener;
 public class Tabs extends TabActivity {
 
 	public static String ANDROIDLOGS_URL;
-
 	private static final String LOG_TAG = Tabs.class.getName();
-
-	// Constants for referring to tabs on the screen.
 	private static final String ARTS_EVENTS_TAB = Constants.ARTS_EVENTS;
-
 	private static final String ARTS_TAB = Constants.ART;
-
 	private static final String ARTISTS_TAB = Constants.ARTISTS;
-
-	// Receiver for intent to change to details tab.
-	// private final BroadcastReceiver mShowDetailsReceiver = new BroadcastReceiver() {
-	// @Override
-	// public void onReceive(final Context context, final Intent intent) {
-	// if ( LOG ) Log.d(LOG_TAG, "Received show details intent.");
-	// getTabHost().setCurrentTabByTag(DETAIL_TAB);
-	// }
-	// };
 
 	private String getVersionName() {
         try {
@@ -89,11 +75,10 @@ public class Tabs extends TabActivity {
 			ANDROIDLOGS_URL = (String) getText(R.string.log_url);
 		}
 		
-		// Setup tabs.
 		final TabHost tabs = getTabHost();
 		final Resources res = getResources();
 
-		tabs.addTab(tabs.newTabSpec(ARTS_EVENTS_TAB).setIndicator(
+		tabs.addTab(tabs.newTabSpec(ARTS_TAB).setIndicator(
 				getText(R.string.tabs_list_indicator),
 				res.getDrawable(R.drawable.nycpark)).setContent(
 				new Intent(this, EventLister.class)));
@@ -101,20 +86,17 @@ public class Tabs extends TabActivity {
 				getText(R.string.tabs_details_indicator),
 				res.getDrawable(R.drawable.paint)).setContent(
 				new Intent(this, EventLister.class)));
-		tabs.addTab(tabs.newTabSpec(ARTISTS_TAB).setIndicator(
+		tabs.addTab(tabs.newTabSpec(ARTS_TAB).setIndicator(
 				getText(R.string.tabs_map_indicator),
 				res.getDrawable(R.drawable.music)).setContent(
 				new Intent(this, EventLister.class)));
-		
-
-		// Restore tab user was last on.
+	
 		final SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(getBaseContext());
 		final String lastTabTag = settings.getString(CURRENT_TAB_PREF,
 				ARTS_EVENTS_TAB);
 		tabs.setCurrentTabByTag(lastTabTag);
 
-		// Store tab switched to for restoring later if restarted.
 		tabs.setOnTabChangedListener(new OnTabChangeListener() {
 			@Override
 			public void onTabChanged(final String tabId) {
@@ -126,24 +108,19 @@ public class Tabs extends TabActivity {
 		});
 
 		final long lastUpdate = settings.getLong(LAST_UPDATED_PREF,0L);
-
-		// only start if it hasn't been already started (by checking last update stamp):
-//		if(System.currentTimeMillis()-lastUpdate > AlarmManager.INTERVAL_HALF_DAY || lastUpdate==0L) {
-//
-//			AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//			Intent intent = new Intent();
-//			intent.setClass(this, DatabaseRefresher.class);
-//
-//			long startTime = 0L;
-//			if(lastUpdate==0L) { // if this is the very first time, delay the start:
-//				startTime = System.currentTimeMillis() + 6 * 60 * 60 * 1000; // for 6 hours from now
-//			}
-//
-//        	Log.i(LOG_TAG, String.format("starting alarm service in %d milliseconds", startTime));
-//			alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, //inexact saves battery
-//					startTime, AlarmManager.INTERVAL_HALF_DAY,
-//					PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT) );
-//		}
+		if(System.currentTimeMillis()-lastUpdate > AlarmManager.INTERVAL_HALF_DAY || lastUpdate==0L) {
+			AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+			Intent intent = new Intent();
+			intent.setClass(this, DatabaseRefresher.class);
+			long startTime = 0L;
+			if(lastUpdate==0L) { // if this is the very first time, delay the start:
+				startTime = System.currentTimeMillis() + 6 * 60 * 60 * 1000; // for 6 hours from now
+			}
+        	Log.i(LOG_TAG, String.format("starting alarm service in %d milliseconds", startTime));
+			alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, //inexact saves battery
+					startTime, AlarmManager.INTERVAL_HALF_DAY,
+					PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT) );
+		}
 	}
 
 	@Override
@@ -198,8 +175,6 @@ public class Tabs extends TabActivity {
 		super.onResume();
 		if (Constants.debug)
 			Log.i(LOG_TAG, "onResume()");
-		// registerReceiver(mShowDetailsReceiver , new
-		// IntentFilter(DETAILS_ACTION));
 	}
 
 	@Override
@@ -208,7 +183,6 @@ public class Tabs extends TabActivity {
 		if (Constants.debug) {
 			Log.i(LOG_TAG, "onPause()");
 		}
-		// unregisterReceiver(mShowDetailsReceiver);
 	}
 
 	@Override

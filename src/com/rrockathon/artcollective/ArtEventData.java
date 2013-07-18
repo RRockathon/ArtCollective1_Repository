@@ -1,5 +1,7 @@
 package com.rrockathon.artcollective;
 
+import java.util.Date;
+
 /**
  *  Entity class for Art Events
  * @author ram
@@ -13,6 +15,16 @@ public class ArtEventData {
 	private String website;
 	private String telephone;
     private String name;
+    
+    public ArtEventData(String name, String title, String category, String description, String location,
+			 String website, String telephone) {
+		this.title = title;
+		this.category = category;
+		this.description = description;
+		this.location = location;
+		this.website = website;
+		this.telephone = telephone;
+	}
     
 	public String getTitle() {
 		return title;
