@@ -51,24 +51,27 @@ public final class R {
         public static final int lister_row=0x7f030005;
     }
     public static final class string {
-        public static final int about=0x7f05000e;
-        public static final int about_text=0x7f050011;
-        public static final int about_title=0x7f050010;
-        public static final int about_url=0x7f050012;
+        public static final int about=0x7f050011;
+        public static final int about_text=0x7f050014;
+        public static final int about_title=0x7f050013;
+        public static final int about_url=0x7f050015;
         public static final int app_name=0x7f050000;
         public static final int details_accessible_field_label=0x7f050002;
         public static final int details_button_send=0x7f050005;
         public static final int details_cbtn=0x7f050003;
         public static final int details_mbtn=0x7f050004;
         public static final int dialog_google_login=0x7f050006;
-        public static final int dialog_google_login_authentication_failure=0x7f05000b;
+        public static final int dialog_google_login_authentication_failure=0x7f05000e;
         public static final int dialog_google_login_button=0x7f050007;
-        public static final int dialog_google_login_connection_failure=0x7f05000d;
-        public static final int dialog_google_login_success=0x7f05000c;
+        public static final int dialog_google_login_connection_failure=0x7f050010;
+        public static final int dialog_google_login_success=0x7f05000f;
         public static final int lister_empty=0x7f050001;
-        public static final int log_url=0x7f050013;
-        public static final int ok=0x7f05000f;
+        public static final int log_url=0x7f050016;
+        public static final int ok=0x7f050012;
         public static final int tabs_details_indicator=0x7f050008;
+        public static final int tabs_label_artists=0x7f05000d;
+        public static final int tabs_label_arts=0x7f05000c;
+        public static final int tabs_label_events=0x7f05000b;
         public static final int tabs_list_indicator=0x7f05000a;
         public static final int tabs_map_indicator=0x7f050009;
     }

@@ -9,17 +9,17 @@ import java.util.Date;
  */
 public class ArtEventData {
 	private String title;
-	private String category;
+
 	private String description;
 	private String location;
 	private String website;
 	private String telephone;
     private String name;
     
-    public ArtEventData(String name, String title, String category, String description, String location,
+    public ArtEventData(String name, String title, String description, String location,
 			 String website, String telephone) {
 		this.title = title;
-		this.category = category;
+		
 		this.description = description;
 		this.location = location;
 		this.website = website;
@@ -32,12 +32,7 @@ public class ArtEventData {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public String getCategory() {
-		return category;
-	}
-	public void setCategory(String category) {
-		this.category = category;
-	}
+	
 	public String getDescription() {
 		return description;
 	}

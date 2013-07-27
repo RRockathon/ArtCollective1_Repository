@@ -37,9 +37,7 @@ public class Tabs extends TabActivity {
 
 	public static String ANDROIDLOGS_URL;
 	private static final String LOG_TAG = Tabs.class.getName();
-	private static final String ARTS_EVENTS_TAB = Constants.ARTS_EVENTS;
-	private static final String ARTS_TAB = Constants.ART;
-	private static final String ARTISTS_TAB = Constants.ARTISTS;
+
 
 	private String getVersionName() {
         try {
@@ -78,23 +76,23 @@ public class Tabs extends TabActivity {
 		final TabHost tabs = getTabHost();
 		final Resources res = getResources();
 
-		tabs.addTab(tabs.newTabSpec(ARTS_TAB).setIndicator(
-				getText(R.string.tabs_list_indicator),
+		tabs.addTab(tabs.newTabSpec(Constants.ART_EVENTS).setIndicator(
+				getText(R.string.tabs_label_events),
 				res.getDrawable(R.drawable.nycpark)).setContent(
 				new Intent(this, EventLister.class)));
-		tabs.addTab(tabs.newTabSpec(ARTS_TAB).setIndicator(
-				getText(R.string.tabs_details_indicator),
+		tabs.addTab(tabs.newTabSpec(Constants.ARTS).setIndicator(
+				getText(R.string.tabs_label_arts),
 				res.getDrawable(R.drawable.paint)).setContent(
 				new Intent(this, EventLister.class)));
-		tabs.addTab(tabs.newTabSpec(ARTS_TAB).setIndicator(
-				getText(R.string.tabs_map_indicator),
+		tabs.addTab(tabs.newTabSpec(Constants.ARTISTS).setIndicator(
+				getText(R.string.tabs_label_artists),
 				res.getDrawable(R.drawable.music)).setContent(
 				new Intent(this, EventLister.class)));
 	
 		final SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(getBaseContext());
 		final String lastTabTag = settings.getString(CURRENT_TAB_PREF,
-				ARTS_EVENTS_TAB);
+				Constants.ART_EVENTS);
 		tabs.setCurrentTabByTag(lastTabTag);
 
 		tabs.setOnTabChangedListener(new OnTabChangeListener() {

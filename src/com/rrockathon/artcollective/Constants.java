@@ -16,11 +16,18 @@ public class Constants {
 	
 	public static final String DETAILS_ACTION = "skylight1.nycevents.intent.DETAILS_ACTION";
 	
-	public static final String ART = "art";
 	
-	public static final String ARTISTS ="music";
 	
-	public static final String ARTS_EVENTS = "events";
+	
+	
+	
+	/* constants used to drive the tabs */
+	public static final String ART_EVENTS = "events";
+	public static final String ARTISTS = "artists";
+	public static final String ARTS = "arts";
+	
+	
+	
 	
 	public static final int DIALOG_ABOUT_ID = 0;
 

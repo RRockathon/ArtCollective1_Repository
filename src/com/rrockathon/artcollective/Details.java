@@ -206,12 +206,10 @@ public class Details extends Activity {
 		if (e.getDescription() != null) {
 			html += e.getDescription();
 		}
-		if (!e.getCategory().equals(Constants.ARTS_EVENTS)) {
 			if (e.getTelephone() != null && e.getTelephone().length() != 0)
 				html += "<p>Contact phone: " + e.getTelephone() + "</p>";
 			else if (e.getLocation() != null && e.getLocation().length() != 0)
 				html += "<p> Location: " + e.getLocation() + "</p>";
-		}
 		html += "</body></html>";
 		html = html.replaceAll("%", "&#37;");
 		return html;

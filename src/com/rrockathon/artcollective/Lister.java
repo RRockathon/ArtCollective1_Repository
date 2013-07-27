@@ -54,17 +54,22 @@ public abstract class Lister extends ListActivity {
 	abstract String getMyType();
 
 	private void fillData() {
+		
 		final DatabaseRefresher dbRefresher = new DatabaseRefresher();
+		
+		
 		final String tabList = getMyType();
-		if (tabList.equals(Constants.ARTS_EVENTS)
-				|| tabList.equals(Constants.ART)
+		Log.i("Load the tab data", tabList);
+		if (tabList.equals(Constants.ART_EVENTS)
+				|| tabList.equals(Constants.ARTS)
 				|| tabList.equals(Constants.ARTISTS)) {
+			
 			if (DatabaseRefresher.count(this, tabList) == 0) {
 				final ProgressDialog progressDialog = new ProgressDialog(
 						Lister.this);
 				progressDialog.setCancelable(true);
 				progressDialog.setIndeterminate(true);
-				progressDialog.setTitle(tabList + " events");
+				progressDialog.setTitle(tabList.toUpperCase());
 				progressDialog.setMessage("Initial Download Please Wait...");
 				progressDialog.show();
 				progressDialog
@@ -123,14 +128,13 @@ public abstract class Lister extends ListActivity {
 		cursor.moveToPosition(position);
 		String name = cursor.getString(cursor.getColumnIndex("name"));
 		String title = cursor.getString(cursor.getColumnIndex("title"));
-		String category = cursor.getString(cursor.getColumnIndex("category"));
 		String description = cursor.getString(cursor
 				.getColumnIndex("description"));
 		String location = cursor.getString(cursor.getColumnIndex("location"));
 		String website = cursor.getString(cursor.getColumnIndex("website"));
 		String telephone = cursor.getString(cursor.getColumnIndex("telephone"));
 
-		currentEvent = new ArtEventData(name, title, category, description,
+		currentEvent = new ArtEventData(name, title, description,
 				location, website, telephone);
 
 		if (Constants.debug)
