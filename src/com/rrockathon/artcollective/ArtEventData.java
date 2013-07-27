@@ -16,6 +16,10 @@ public class ArtEventData {
 	private String telephone;
     private String name;
     
+    public ArtEventData(){
+    	
+    }
+    
     public ArtEventData(String name, String title, String description, String location,
 			 String website, String telephone) {
 		this.title = title;
