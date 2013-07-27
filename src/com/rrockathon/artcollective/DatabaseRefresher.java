@@ -22,7 +22,8 @@ import android.util.Log;
 
 public class DatabaseRefresher extends Service {
 
-	//note: workaround for rare case when background thread and foreground compete (short of using a lock)
+	// note: workaround for rare case when background thread and foreground
+	// compete (short of using a lock)
 	public static boolean updating;
 
 	@Override
@@ -39,28 +40,37 @@ public class DatabaseRefresher extends Service {
 	public void onStart(Intent intent, int startId) {
 		super.onStart(intent, startId);
 		updating = true;
-		Log.i(DatabaseRefresher.class.getName(),String.format("service id=%d started", startId));
+		Log.i(DatabaseRefresher.class.getName(),
+				String.format("service id=%d started", startId));
 
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				new DataFetchRunnable(DatabaseRefresher.this, Constants.ART_EVENTS).run();
+				new DataFetchRunnable(DatabaseRefresher.this,
+						Constants.ART_EVENTS).run();
 			}
 		}).start();
 	}
 
 	private static SQLiteDatabase getDatabase(Context aContext) {
-		SQLiteDatabase database = new SQLiteOpenHelper(aContext, "events", null, 1) {
+		SQLiteDatabase database = new SQLiteOpenHelper(aContext, "events",
+				null, 1) {
 			@Override
 			public void onCreate(SQLiteDatabase database) {
-				Log.i(DatabaseRefresher.class.getName(), "new database; creating tables");
-				database
-						.execSQL("create table events (_id integer primary key, name text, title text, description text, location text, website text, telephone text)");
+				Log.i(DatabaseRefresher.class.getName(),
+						"new database; creating tables");
+				database.execSQL("create table events (_id integer primary key, name text, title text, description text, location text, website text, telephone text)");
+				database.execSQL("create table arts (_id integer primary key, name text, artistname text, description text, year text, arttype text)");
+
+				database.execSQL("create table artists (_id integer primary key, name text, address1 text, address2 text, city text, state text, zip text, country text, phone text, email text, website text)");
 			}
 
 			@Override
-			public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+			public void onUpgrade(SQLiteDatabase db, int oldVersion,
+					int newVersion) {
 				db.execSQL("DROP TABLE IF EXISTS events");
+				db.execSQL("DROP TABLE IF EXISTS arts");
+				db.execSQL("DROP TABLE IF EXISTS artists");
 				onCreate(db);
 			}
 		}.getWritableDatabase();
@@ -82,7 +92,8 @@ public class DatabaseRefresher extends Service {
 			settings = PreferenceManager.getDefaultSharedPreferences(context);
 		}
 
-		public DataFetchRunnable(ProgressDialog pd, Context aContext, String anEventType) {
+		public DataFetchRunnable(ProgressDialog pd, Context aContext,
+				String anEventType) {
 			progressDialog = pd;
 			context = aContext;
 			eventType = anEventType;
@@ -91,38 +102,39 @@ public class DatabaseRefresher extends Service {
 
 		@Override
 		public void run() {
-			
-			if(updating && progressDialog==null || !updating && progressDialog!=null) {
-				Log.i(DatabaseRefresher.class.getName(), "about to open database");
+
+			if (updating && progressDialog == null || !updating
+					&& progressDialog != null) {
+				Log.i(DatabaseRefresher.class.getName(),
+						"about to open database");
 
 				try {
 					database = getDatabase(context);
-
+					database.beginTransaction();
 					final List<ArtEventData> eventList;
 
 					if (eventType.equals(Constants.ART_EVENTS)) {
 						eventList = new ArtEventLoader().getArtEventsData();
-						
+
+						if (eventList.size() > 0) {
+							// remove all of the existing events
+							database.execSQL("delete from events");
+
+							final SQLiteStatement compiledStatement = database
+									.compileStatement("insert into events (_id, name, title, description, location, website, telephone) values (null, ?,?,?,?,?,?)");
+
+							insertEvents(compiledStatement, eventList);
+
+						}
+					} else if (eventType.equals(Constants.ARTS)) {
+						eventList = null;
+					} else if (eventType.equals(Constants.ARTISTS)) {
+						eventList = null;
 					} else {
-						throw new RuntimeException("knew we should have used an enum!");
+						throw new RuntimeException("Event Type not supported");
 					}
-
-					if(eventList.size()>0) {
-						database.beginTransaction();
-
-						// remove all of the existing events
-						database.execSQL("delete from events");
-
-						final SQLiteStatement compiledStatement = database
-								.compileStatement("insert into events (_id, name, title, description, location, website, telephone) values (null, ?,?,?,?,?,?)");
-
-						insertEvents(compiledStatement, eventList);
-
-						database.setTransactionSuccessful();
-
-						database.endTransaction();
-					}
-
+					database.setTransactionSuccessful();
+					database.endTransaction();
 				} catch (Exception e) {
 					// no network connection, no problem
 				} finally {
@@ -132,12 +144,12 @@ public class DatabaseRefresher extends Service {
 			if (progressDialog != null && progressDialog.isShowing()) {
 				progressDialog.cancel();
 			}
-			if (eventType.equals(Constants.ART_EVENTS)) {
+			//if (eventType.equals(Constants.ART_EVENTS)) {
 				updating = false;
 				final Editor edit = settings.edit();
 				edit.putLong(LAST_UPDATED_PREF, System.currentTimeMillis());
 				edit.commit();
-			}
+			//}
 		}
 
 	}
@@ -146,7 +158,7 @@ public class DatabaseRefresher extends Service {
 		if (database != null) {
 			database.close();
 			SQLiteDatabase.releaseMemory();
-			database=null;
+			database = null;
 		}
 
 		Log.i(DatabaseRefresher.class.getName(), "database closed");
@@ -159,7 +171,8 @@ public class DatabaseRefresher extends Service {
 		database = getDatabase(aContext);
 		database.beginTransaction();
 
-		Cursor cursor = database.rawQuery("SELECT COUNT(*) FROM events", null);
+		Cursor cursor = database.rawQuery(
+				"SELECT COUNT(*) FROM " + anEventType, null);
 		if (null == cursor) {
 			return 0;
 		}
@@ -170,20 +183,21 @@ public class DatabaseRefresher extends Service {
 		database.endTransaction();
 		database.close();
 		SQLiteDatabase.releaseMemory();
-		database=null;
+		database = null;
 		return count;
 	}
 
-	public Cursor getEventDataListCursor(Context aContext, String category) {
+	public Cursor getDataListCursor(Context aContext, String category) {
 		SQLiteDatabase database = getDatabase(aContext);
-		Cursor cursor = database.rawQuery("SELECT * FROM events", null);
+		Cursor cursor = database.rawQuery("SELECT * FROM "+category, null);
 		if (null == cursor) {
 			return null;
 		}
 		return cursor;
 	}
 
-	private static void insertEvents(final SQLiteStatement compiledStatement, final List<ArtEventData> eventList) {
+	private static void insertEvents(final SQLiteStatement compiledStatement,
+			final List<ArtEventData> eventList) {
 		for (ArtEventData eventData : eventList) {
 			setString(compiledStatement, 1, eventData.getName());
 			setString(compiledStatement, 2, eventData.getTitle());
@@ -193,7 +207,8 @@ public class DatabaseRefresher extends Service {
 			setString(compiledStatement, 6, eventData.getTelephone());
 			compiledStatement.execute();
 		}
-		Log.i(DatabaseRefresher.class.getName(), String.format("inserted %d rows", eventList.size()));
+		Log.i(DatabaseRefresher.class.getName(),
+				String.format("inserted %d rows", eventList.size()));
 	}
 
 	private static void setString(SQLiteStatement statement, int i, String s) {

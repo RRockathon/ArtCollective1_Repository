@@ -39,8 +39,10 @@ public final class R {
         public static final int details_details=0x7f070006;
         public static final int details_mbtn=0x7f070004;
         public static final int layout_root=0x7f070007;
-        public static final int lister_row_site_location=0x7f07000b;
-        public static final int lister_row_site_title=0x7f07000a;
+        public static final int lister_row1=0x7f07000a;
+        public static final int lister_row2=0x7f07000b;
+        public static final int lister_row3=0x7f07000c;
+        public static final int lister_row4=0x7f07000d;
     }
     public static final class layout {
         public static final int about_dialog=0x7f030000;

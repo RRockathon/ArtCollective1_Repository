@@ -54,12 +54,9 @@ public abstract class Lister extends ListActivity {
 	abstract String getMyType();
 
 	private void fillData() {
-		
-		final DatabaseRefresher dbRefresher = new DatabaseRefresher();
-		
-		
 		final String tabList = getMyType();
 		Log.i("Load the tab data", tabList);
+		final DatabaseRefresher dbRefresher = new DatabaseRefresher();
 		if (tabList.equals(Constants.ART_EVENTS)
 				|| tabList.equals(Constants.ARTS)
 				|| tabList.equals(Constants.ARTISTS)) {
@@ -92,13 +89,30 @@ public abstract class Lister extends ListActivity {
 
 	private void setContentToCursor(final DatabaseRefresher dbRefresher,
 			final String eventType) {
-		Cursor cursor = dbRefresher.getEventDataListCursor(Lister.this,
-				eventType);
+		Cursor cursor = null;
+		String[] names = null;
+		int[] ids = null;
+		cursor = dbRefresher.getDataListCursor(Lister.this, eventType);
+		
+		if(Constants.ARTS.equals(eventType)){
+			names = new String[] { "name", "artistname", };
+			 ids = new int[] { R.id.lister_row1,
+						R.id.lister_row2 };
+		} else if(Constants.ARTISTS.equals(eventType)) {
+			names = new String[] {"name", "city", "state", "country"};
+			 ids = new int[] { R.id.lister_row1,
+						R.id.lister_row2, R.id.lister_row3,
+						R.id.lister_row4  };
+		} else if(Constants.ART_EVENTS.equals(eventType)){
+			 names = new String[] { "title", "location", };
+			 ids = new int[] { R.id.lister_row1,
+						R.id.lister_row2 };
+			 
+		}
+		
 		startManagingCursor(cursor);
-		String[] names = new String[] { "title", "location", };
-		int[] ids = new int[] { R.id.lister_row_site_title,
-				R.id.lister_row_site_location };
-		EventViewAdapter eventViewAdapter = new EventViewAdapter(Lister.this,
+		
+		ViewAdapter eventViewAdapter = new ViewAdapter(Lister.this,
 				R.layout.lister_row, cursor, names, ids);
 		setListAdapter(eventViewAdapter);
 	}
@@ -113,13 +127,50 @@ public abstract class Lister extends ListActivity {
 		setContentView(R.layout.lister);
 	}
 
-	private ArtEventData getModel(int position) {
+	private ArtEventData getArtEventModel(int position) {
 		if (position > eventList.size() - 1) {
 			return eventList.get(eventList.size() - 1);
 		}
 		return eventList.get(position);
 	}
 
+	
+
+	
+//	/**
+//	 * Adapter for binding data to list
+//	 */
+//	class EventViewAdapter extends SimpleCursorAdapter {
+//
+//		public EventViewAdapter(Context context, int layout, Cursor c,
+//				String[] from, int[] to) {
+//			super(context, layout, c, from, to);
+//			setViewBinder(new EventListViewBinder());
+//		}
+//	}
+	
+	/**
+	 * Adapter for binding data to list
+	 */
+	class ViewAdapter extends SimpleCursorAdapter {
+
+		public ViewAdapter(Context context, int layout, Cursor c,
+				String[] from, int[] to) {
+			super(context, layout, c, from, to);
+			setViewBinder(new ListViewBinder());
+		}
+	}
+	
+
+	class ListViewBinder implements SimpleCursorAdapter.ViewBinder {
+		@Override
+		public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+			int dateColIndex = 5;
+			return false;
+		}
+
+	}
+	
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
@@ -148,74 +199,71 @@ public abstract class Lister extends ListActivity {
 		startActivity(i);
 		sendBroadcast(i);
 	}
+	
+//	class EventDataAdapter extends ArrayAdapter<String> {
+//		EventDataAdapter() {
+//			super(Lister.this, R.layout.lister_row, titles);
+//		}
+//
+//		public View getView(int position, View convertView, ViewGroup parent) {
+//			View row = convertView;
+//			ViewWrapper wrapper = null;
+//			if (row == null) {
+//				LayoutInflater inflater = getLayoutInflater();
+//				row = inflater.inflate(R.layout.lister_row, parent, false);
+//				wrapper = new ViewWrapper(row);
+//				row.setTag(wrapper);
+//			} else {
+//				wrapper = (ViewWrapper) row.getTag();
+//			}
+//			wrapper.getRow1().setText(getArtEventModel(position).getTitle());
+//			wrapper.getRow2().setText(getArtEventModel(position).getLocation());
+//			return (row);
+//		}
+//
+//		class ViewWrapper {
+//			View base;
+//			TextView row1 = null;
+//			TextView row2 = null;
+//			TextView row3 = null;
+//			TextView row4 = null;
+//
+//			ViewWrapper(View base) {
+//				this.base = base;
+//			}
+//
+//			TextView getRow1() {
+//				if (row1 == null) {
+//					row1 = (TextView) base
+//							.findViewById(R.id.lister_row1);
+//				}
+//				return (row1);
+//			}
+//
+//			TextView getRow2() {
+//				if (row2 == null) {
+//					row2 = (TextView) base
+//							.findViewById(R.id.lister_row2);
+//				}
+//				return (row2);
+//			}
+//			TextView getRow3() {
+//				if (row3 == null) {
+//					row3 = (TextView) base
+//							.findViewById(R.id.lister_row3);
+//				}
+//				return (row3);
+//			}
+//
+//			TextView getRow4() {
+//				if (row4 == null) {
+//					row4 = (TextView) base
+//							.findViewById(R.id.lister_row4);
+//				}
+//				return (row4);
+//			}
+//		}
+//	}
 
-	class EventDataAdapter extends ArrayAdapter<String> {
-		EventDataAdapter() {
-			super(Lister.this, R.layout.lister_row, titles);
-		}
-
-		public View getView(int position, View convertView, ViewGroup parent) {
-			View row = convertView;
-			ViewWrapper wrapper = null;
-			if (row == null) {
-				LayoutInflater inflater = getLayoutInflater();
-				row = inflater.inflate(R.layout.lister_row, parent, false);
-				wrapper = new ViewWrapper(row);
-				row.setTag(wrapper);
-			} else {
-				wrapper = (ViewWrapper) row.getTag();
-			}
-			wrapper.getTitle().setText(getModel(position).getTitle());
-			wrapper.getLocation().setText(getModel(position).getLocation());
-			return (row);
-		}
-
-		class ViewWrapper {
-			View base;
-			TextView title = null;
-			TextView location = null;
-
-			ViewWrapper(View base) {
-				this.base = base;
-			}
-
-			TextView getTitle() {
-				if (title == null) {
-					title = (TextView) base
-							.findViewById(R.id.lister_row_site_title);
-				}
-				return (title);
-			}
-
-			TextView getLocation() {
-				if (location == null) {
-					location = (TextView) base
-							.findViewById(R.id.lister_row_site_location);
-				}
-				return (location);
-			}
-		}
-	}
-
-	/**
-	 * Adapter for binding data to list
-	 */
-	class EventViewAdapter extends SimpleCursorAdapter {
-
-		public EventViewAdapter(Context context, int layout, Cursor c,
-				String[] from, int[] to) {
-			super(context, layout, c, from, to);
-			setViewBinder(new EventListViewBinder());
-		}
-	}
-
-	class EventListViewBinder implements SimpleCursorAdapter.ViewBinder {
-		@Override
-		public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-			int dateColIndex = 5;
-			return false;
-		}
-
-	}
 
 }

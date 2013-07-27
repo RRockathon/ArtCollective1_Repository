@@ -30,6 +30,16 @@
                   android:screenOrientation="portrait">
                   
         </activity>
+        <activity android:name="com.rrockathon.artcollective.ArtLister"
+                  android:label="@string/app_name"
+                  android:screenOrientation="portrait">
+                  
+        </activity>
+        <activity android:name="com.rrockathon.artcollective.ArtistLister"
+                  android:label="@string/app_name"
+                  android:screenOrientation="portrait">
+                  
+        </activity>
          <activity android:name="com.rrockathon.artcollective.Details"
                   android:label="@string/app_name"
                   android:screenOrientation="portrait">

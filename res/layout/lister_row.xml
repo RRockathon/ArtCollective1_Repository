@@ -7,7 +7,7 @@
     android:paddingBottom="10sp"
     >
     <TextView
-        android:id="@+id/lister_row_site_title"
+        android:id="@+id/lister_row1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textSize="14sp"
@@ -16,9 +16,30 @@
         />
    
     <TextView
-        android:id="@+id/lister_row_site_location"
+        android:id="@+id/lister_row2"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="#fff"
         />
+
+    <TextView
+        android:id="@+id/lister_row3"
+         android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="#fff" />
+
+    <TextView
+        android:id="@+id/lister_row4"
+         android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="#fff" />
+
+  
+
 </LinearLayout>

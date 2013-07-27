@@ -83,11 +83,11 @@ public class Tabs extends TabActivity {
 		tabs.addTab(tabs.newTabSpec(Constants.ARTS).setIndicator(
 				getText(R.string.tabs_label_arts),
 				res.getDrawable(R.drawable.paint)).setContent(
-				new Intent(this, EventLister.class)));
+				new Intent(this, ArtLister.class)));
 		tabs.addTab(tabs.newTabSpec(Constants.ARTISTS).setIndicator(
 				getText(R.string.tabs_label_artists),
 				res.getDrawable(R.drawable.music)).setContent(
-				new Intent(this, EventLister.class)));
+				new Intent(this, ArtistLister.class)));
 	
 		final SharedPreferences settings = PreferenceManager
 				.getDefaultSharedPreferences(getBaseContext());
@@ -106,7 +106,8 @@ public class Tabs extends TabActivity {
 		});
 
 		final long lastUpdate = settings.getLong(LAST_UPDATED_PREF,0L);
-		if(System.currentTimeMillis()-lastUpdate > AlarmManager.INTERVAL_HALF_DAY || lastUpdate==0L) {
+		//if(System.currentTimeMillis()-lastUpdate > AlarmManager.INTERVAL_FIFTEEN_MINUTES || lastUpdate==0L) {
+		if(System.currentTimeMillis()-lastUpdate > 60000 || lastUpdate==0L) {
 			AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 			Intent intent = new Intent();
 			intent.setClass(this, DatabaseRefresher.class);
